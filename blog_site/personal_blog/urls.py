@@ -1,5 +1,5 @@
 """
-URL configuration for myblog project.
+URL configuration for personal_blog project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path('blog/', include('blog.urls', namespace='blog')),
-
+    path('admin/', admin.site.urls),
+    path('', include('blog.urls')),
 ]
