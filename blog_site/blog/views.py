@@ -4,6 +4,9 @@ from django.urls import reverse
 from django.views.generic import DetailView
 from django.views.generic.edit import FormMixin, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.views.generic import UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 # Create your views here.
 
@@ -144,6 +147,38 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('blog_detail', kwargs={'pk': self.object.pk})
+
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """Allow the post owner to edit their post."""
+
+    model = Post
+    fields = ['title', 'body', 'categories']
+    template_name = 'blog/post_form.html'
+
+    def form_valid(self, form):
+        # author should not change; keep existing
+        return super().form_valid(form)
+
+    def test_func(self):
+        # Only allow the author to edit
+        post = self.get_object()
+        return self.request.user.is_authenticated and post.author == self.request.user
+
+    def get_success_url(self):
+        return reverse('blog_detail', kwargs={'pk': self.object.pk})
+
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """Allow the post owner to delete their post."""
+
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    success_url = reverse_lazy('blog_index')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user.is_authenticated and post.author == self.request.user
 
 
 # For backwards-compatibility you can keep a tiny wrapper that uses the
