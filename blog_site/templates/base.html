@@ -6,10 +6,32 @@
     <meta charset="utf-8">
     <title>My Personal Blog</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <style>
+        /* simple inline nav separators without trailing artifacts */
+        .top-nav { margin: 0; padding: 0; }
+        .top-nav li { display: inline; }
+        .top-nav li + li:before { content: " | "; color: #333; }
+        /* Home link styling: larger and on its own line */
+        .home-link { margin-bottom: 0.25rem; }
+        .home-link a { font-size: 1.25rem; font-weight: 700; text-decoration: none; }
+    </style>
 </head>
 <body>
 <h1>My Personal Blog</h1>
-<a href="{% url "blog_index" %}">Home</a>
+<nav>
+    <div class="home-link"><a href="{% url 'blog_index' %}">Home</a></div>
+    <ul class="top-nav">
+        {% if request.user.is_authenticated %}
+            <li>Logged in as <strong>{{ request.user.username }}</strong></li>
+            <li><a href="{% url 'blog_user_posts' request.user.username %}">My posts</a></li>
+            <li><a href="{% url 'blog_post_create' %}">New post</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'signup' %}">Sign up</a></li>
+        {% endif %}
+    </ul>
+</nav>
 <hr>
 {% block page_title %}{% endblock page_title %}
 {% block page_content %}{% endblock page_content %}

@@ -3,8 +3,10 @@
 from django import forms
 
 class CommentForm(forms.Form):
+    # author is optional because logged-in users will be used instead
     author = forms.CharField(
         max_length=60,
+        required=False,
         widget=forms.TextInput(
             attrs={"class": "form-control", "placeholder": "Your Name"}
         ),

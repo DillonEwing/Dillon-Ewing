@@ -20,7 +20,9 @@
     <form method="post">
         {% csrf_token %}
         <div>
-            {{ form.author }}
+            {% if not request.user.is_authenticated %}
+                {{ form.author }}
+            {% endif %}
         </div>
         <div>
             {{ form.body }}

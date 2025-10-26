@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+<h2>Posts by {{ user_profile.username }}</h2>
+{% endblock page_title %}
+
+{% block page_content %}
+    {% for post in posts %}
+        <h3><a href="{% url 'blog_detail' post.pk %}">{{ post.title }}</a></h3>
+        <small>{{ post.created_on.date }}</small>
+        <p>{{ post.body|slice:":400" }}...</p>
+    {% empty %}
+        <p>No posts yet.</p>
+    {% endfor %}
+{% endblock page_content %}
