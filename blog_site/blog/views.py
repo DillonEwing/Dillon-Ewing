@@ -163,7 +163,10 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         # Only allow the author to edit
         post = self.get_object()
-        return self.request.user.is_authenticated and post.author == self.request.user
+        # Allow the author or any user in the 'Editors' group (role-based permission)
+        is_owner = self.request.user.is_authenticated and post.author == self.request.user
+        is_editor = self.request.user.is_authenticated and self.request.user.groups.filter(name='Editors').exists()
+        return is_owner or is_editor
 
     def get_success_url(self):
         return reverse('blog_detail', kwargs={'pk': self.object.pk})
@@ -178,7 +181,10 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         post = self.get_object()
-        return self.request.user.is_authenticated and post.author == self.request.user
+        # Allow the author or any user in the 'Editors' group (role-based permission)
+        is_owner = self.request.user.is_authenticated and post.author == self.request.user
+        is_editor = self.request.user.is_authenticated and self.request.user.groups.filter(name='Editors').exists()
+        return is_owner or is_editor
 
 
 # For backwards-compatibility you can keep a tiny wrapper that uses the
