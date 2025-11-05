@@ -123,3 +123,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# After logout, redirect users to the home page instead of rendering a
+# missing template. This avoids errors when a `registration/logged_out.html`
+# template is not present.
+LOGOUT_REDIRECT_URL = '/' 
