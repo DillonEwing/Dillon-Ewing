@@ -1,0 +1,31 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+  <div class="module" style="margin-bottom:1em;">
+    <div style="padding:0.6em;margin-bottom:0.6em;border-left:4px solid #3c8dbc;background:#f0f8ff;">
+      <strong>{% trans "Admin note:" %}</strong>
+      {% trans "Business use cases and acceptance criteria are in" %}
+      <code>docs/admin_use_cases.md</code>.
+    </div>
+  </div>
+
+  {% if app_list %}
+    {% for app in app_list %}
+      <div class="app-{{ app.app_label }}">
+        <h2>{{ app.name }}</h2>
+        <ul>
+        {% for model in app.models %}
+          <li>
+            <a href="{{ model.admin_url }}">{{ model.name }}</a>
+            {% if model.admin_url %}<small> &mdash; {% trans "manage" %}</small>{% endif %}
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>{% trans "No apps are available." %}</p>
+  {% endif %}
+
+{% endblock %}
